@@ -3,7 +3,7 @@
 <plist version="1.0">
   <dict>
     <key>CFBundleIdentifier</key>
-    <string>syco.plex.acestream</string>
+    <string>com.floydev.plex.acestream</string>
     <key>PlexClientPlatforms</key>
     <string>*</string>
     <key>PlexFrameworkVersion</key>

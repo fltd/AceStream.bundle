@@ -1,20 +1,22 @@
-## Plex plug-in that plays live streams using acestream engine ##
+# AceStream.bundle
 
-### Introduction ###
-A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that scrapes reddit's pages looking for acestream links and then populate a list understandable by plex.
+This is based on the ACE.bundle ([https://github.com/syco/ACE.bundle](https://github.com/syco/ACE.bundle)) by @syco
 
-### Supported subreddits ###
-* boxingstreams
-* nbastreams
-* nflstreams
-* MMAStreams
-* motorsportsstreams
+## Introduction
+
+A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that play scrapes reddit's pages looking for acestream links and then populate a list understandable by plex, or plays your customized AceStream ID.
+
+## Subreddits to scrape from
+
+* soccerstreams_pl
 * soccerstreams_other
 
-### Requirements ###
-In order to stream content you need acestream engine on the same host listening on port 6878, I personally start the engine with options "--log-stdout --client-console"
+## Requirements
 
-### License ###
+A running AceStream Engine with HTTP API exposed is required.
+
+## License
+
 Copyright © 2018-2018 Syco
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
