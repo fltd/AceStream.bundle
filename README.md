@@ -4,7 +4,7 @@ This is based on the ACE.bundle ([https://github.com/syco/ACE.bundle](https://gi
 
 ## Introduction
 
-A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that play scrapes reddit's pages looking for acestream links and then populate a list understandable by plex, or plays your customized AceStream ID.
+A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that scrapes reddit's pages looking for acestream links and then populate a list understandable by plex, or plays your customized AceStream ID.
 
 ## Subreddits to scrape from
 
