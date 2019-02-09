@@ -8,8 +8,7 @@ A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that play scrapes 
 
 ## Subreddits to scrape from
 
-* soccerstreams_pl
-* soccerstreams_other
+* redditsoccer
 
 ## Requirements
 
