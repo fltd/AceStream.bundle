@@ -15,12 +15,7 @@ def Start():
 @handler("/video/acestream", "AceStream", thumb="logo.png", art="logo.png")
 def MainMenu():
     oc = ObjectContainer(title2="AceStream")
-    oc.add(
-        DirectoryObject(
-            key=Callback(MainMenu),
-            title="Refresh",
-        )
-    )
+    oc.add(DirectoryObject(key=Callback(MainMenu), title="Refresh"))
     if Prefs["stream_id"]:
         aurl = "http://{}:{}/ace/manifest.m3u8?id={}".format(
             Prefs["ace_host"], Prefs["ace_port"], Prefs["stream_id"]
