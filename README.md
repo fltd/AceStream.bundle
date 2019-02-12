@@ -8,7 +8,7 @@ A [Plex Media Servers](https://www.plex.tv/downloads) plug-in that scrapes reddi
 
 ## Subreddits to scrape from
 
-* redditsoccer
+* soccerstreams69
 
 ## Requirements
 
