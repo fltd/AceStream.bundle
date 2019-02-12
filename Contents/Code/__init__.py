@@ -24,8 +24,8 @@ def MainMenu():
         oc.add(Show(url=aurl, title=acedesc.decode("UTF-8")))
     oc.add(
         DirectoryObject(
-            key=Callback(ShowSubRedditRedditSoccerPosts, title="/r/redditsoccer"),
-            title="/r/redditsoccer",
+            key=Callback(ShowSubRedditSoccerStreams69Posts, title="/r/SoccerStreams69"),
+            title="/r/SoccerStreams69",
         )
     )
     return oc
@@ -120,15 +120,15 @@ def ShowStreamsInRedditPosts(title, url):
     return oc
 
 
-@route("/video/acestream/r/redditsoccer")
-def ShowSubRedditRedditSoccerPosts(title):
+@route("/video/acestream/r/soccerstreams69")
+def ShowSubRedditSoccerStreams69Posts(title):
     oc = ObjectContainer(title2=title)
     oc.add(
         DirectoryObject(
-            key=Callback(ShowSubRedditRedditSoccerPosts, title=title), title="Refresh"
+            key=Callback(ShowSubRedditSoccerStreams69Posts, title=title), title="Refresh"
         )
     )
-    fetchSubRedditPosts(oc, "https://www.reddit.com/r/redditsoccer.json", " vs")
+    fetchSubRedditPosts(oc, "https://www.reddit.com/r/soccerstreams69.json", " vs")
     return oc
 
 
