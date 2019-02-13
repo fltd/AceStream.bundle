@@ -40,10 +40,14 @@ def fetchSubRedditPosts(oc, url, selector):
             title = t3["data"]["title"]
             if title.lower().find(selector) != -1:
                 title2 = "{}, by {}".format(title, t3["data"]["author"]).decode("UTF-8")
-                url2 = t3["data"]["url"].decode("UTF-8")
+                permalink = t3["data"]["permalink"].decode("UTF-8")
                 oc.add(
                     DirectoryObject(
-                        key=Callback(ShowStreamsInRedditPosts, title=title2, url=url2),
+                        key=Callback(
+                            ShowStreamsInRedditPosts,
+                            title=title2,
+                            url="https://www.reddit.com{0!s}".format(permalink),
+                        ),
                         title=title2,
                     )
                 )
