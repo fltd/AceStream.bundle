@@ -129,7 +129,8 @@ def ShowSubRedditSoccerStreams69Posts(title):
     oc = ObjectContainer(title2=title)
     oc.add(
         DirectoryObject(
-            key=Callback(ShowSubRedditSoccerStreams69Posts, title=title), title="Refresh"
+            key=Callback(ShowSubRedditSoccerStreams69Posts, title=title),
+            title="Refresh",
         )
     )
     fetchSubRedditPosts(oc, "https://www.reddit.com/r/soccerstreams69.json", " vs")
