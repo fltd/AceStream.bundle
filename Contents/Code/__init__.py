@@ -46,7 +46,9 @@ def fetchSubRedditPosts(oc, url, selector):
                         key=Callback(
                             ShowStreamsInRedditPosts,
                             title=title2,
-                            url="https://www.reddit.com{0!s}".format(permalink),
+                            url="https://www.reddit.com{0!s}index.json".format(
+                                permalink
+                            ),
                         ),
                         title=title2,
                     )
