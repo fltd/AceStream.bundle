@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta
 import json
 import re
+from lxml import etree
+from datetime import datetime, timedelta
 
 
 def Start():
@@ -24,61 +25,76 @@ def MainMenu():
         oc.add(Show(url=aurl, title=acedesc.decode("UTF-8")))
     oc.add(
         DirectoryObject(
-            key=Callback(ShowSubRedditSoccerStreams69Posts, title="/r/SoccerStreams69"),
-            title="/r/SoccerStreams69",
+            key=Callback(ShowFootybitePosts, title="Footybite"), title="Footybite"
         )
     )
     return oc
 
 
-def fetchSubRedditPosts(oc, url, selector):
-    plus = ""
+def fetchFootybitePosts(oc):
+    # Force HTTP due to the exception - SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+    url = "http://www.footybite.com/page/{0!s}/"
+    selector = " vs"
+    p = 1
+    yesterday = datetime.utcnow() - timedelta(days=1)
+    up_to_date = True
     while True:
-        html = HTTP.Request(url + plus).content
-        js = json.loads(html)
-        for t3 in js["data"]["children"]:
-            title = t3["data"]["title"]
+        html = HTTP.Request(url.format(p)).content
+        doc = etree.HTML(html)
+        items = doc.xpath(".//div[@role='main']//div[@class='item-details']")
+        for item in items:
+            date_node = item.xpath(".//*[contains(@class, 'entry-date')]/@datetime")
+            date = None
+            if date_node:
+                date = date_node[0]
+            if not date:
+                continue
+            href_node = item.xpath("./*[contains(@class, 'entry-title')]/a/@href")
+            href = None
+            if href_node:
+                href = href_node[0]
+            if not href:
+                continue
+            title_node = item.xpath("./*[contains(@class, 'entry-title')]/a/text()")
+            title = None
+            if title_node:
+                title = title_node[0]
+            if not title:
+                continue
+
             if title.lower().find(selector) != -1:
-                title2 = "{}, by {}".format(title, t3["data"]["author"]).decode("UTF-8")
-                permalink = t3["data"]["permalink"].decode("UTF-8")
+                date = datetime.strptime(
+                    date.replace("+00:00", "Z"), "%Y-%m-%dT%H:%M:%SZ"
+                )
+                if yesterday > date:
+                    up_to_date = False
+                    break
+                title = title.replace(" Preview & Prediction", "")
+                title = title.replace(" Preview", "")
+                title = title.replace(" preview", "")
+                obj_title = "{} posted on {:%Y-%m-%d}".format(title, date).decode(
+                    "UTF-8"
+                )
                 oc.add(
                     DirectoryObject(
                         key=Callback(
-                            ShowStreamsInRedditPosts,
-                            title=title2,
-                            url="https://www.reddit.com{0!s}index.json".format(
-                                permalink
-                            ),
+                            ShowStreamsInFootybitePosts, title=obj_title, url=href
                         ),
-                        title=title2,
+                        title=obj_title,
                     )
                 )
-        after = js["data"]["after"]
-        if after is None:
+        if not items or not up_to_date:
             break
         else:
-            plus = "?after=" + after
+            p += 1
 
 
-def findAllData(js, ks):
-    arr = []
-    if isinstance(js, dict):
-        for k in js:
-            if k == ks and "body" in js[k]:
-                arr.append(js[k])
-            arr.extend(findAllData(js[k], ks))
-    elif isinstance(js, list):
-        for sjs in js:
-            arr.extend(findAllData(sjs, ks))
-    return arr
-
-
-@route("/video/acestream/r/streams")
-def ShowStreamsInRedditPosts(title, url):
+@route("/video/acestream/footybite/streams")
+def ShowStreamsInFootybitePosts(title, url):
     oc = ObjectContainer(title2=title)
     oc.add(
         DirectoryObject(
-            key=Callback(ShowStreamsInRedditPosts, title=title, url=url),
+            key=Callback(ShowStreamsInFootybitePosts, title=title, url=url),
             title="Refresh",
         )
     )
@@ -88,37 +104,47 @@ def ShowStreamsInRedditPosts(title, url):
     )
     lang_0 = []
     lang_1 = []
-    plus = ""
-    while True:
-        html = HTTP.Request(url[:-1] + ".json" + plus).content
-        js = json.loads(html)
-        arr = findAllData(js, "data")
-        for t3 in arr:
-            for m in re.finditer(pattern, t3["body"]):
-                aceid = m.group(2)
-                acedesc = "{}{} [{}] by {}".format(
-                    m.group(1), m.group(3), aceid, t3["author"]
-                )
-                aurl = "http://{}:{}/ace/manifest.m3u8?id={}".format(
-                    Prefs["ace_host"], Prefs["ace_port"], aceid
-                )
-                Log(aurl)
-                if (
-                    re.search(
-                        "\[(ar|croatian|es|esp|ger|german|kazakh|pl|portugal|pt|ru|spanish|ukrainian)\]",
-                        acedesc,
-                        re.IGNORECASE,
+    # Force HTTP due to the exception - SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+    html = HTTP.Request(url.replace("https://", "http://")).content
+    doc = etree.HTML(html)
+    table_node = doc.xpath(".//table[@id='dataTable']")
+    table = None
+    if table_node:
+        table = table_node[0]
+    if not table:
+        return oc
+    rows = table.xpath(".//tr")
+    for row in rows:
+        cols = row.xpath("./th")
+        if cols and cols[1] is not None:
+            aurl_col = cols[1].xpath("./text()")
+            if aurl_col and aurl_col[0] is not None:
+                aurl = aurl_col[0]
+                streamer_node = cols[0].xpath("./text()")
+                streamer = "unknown"
+                if streamer_node:
+                    streamer = streamer_node[0]
+                for m in re.finditer(pattern, aurl):
+                    aceid = m.group(2)
+                    acedesc = "{}{} [{}] by {}".format(
+                        m.group(1), m.group(3), aceid, streamer
                     )
-                    == None
-                ):
-                    lang_1.append(Show(url=aurl, title=acedesc.decode("UTF-8")))
-                else:
-                    lang_0.append(Show(url=aurl, title=acedesc.decode("UTF-8")))
-        after = js[0]["data"]["after"]
-        if after is None:
-            break
-        else:
-            plus = "?after=" + after
+                    aurl = "http://{}:{}/ace/manifest.m3u8?id={}".format(
+                        Prefs["ace_host"], Prefs["ace_port"], aceid
+                    )
+                    Log(aurl)
+                    if (
+                        re.search(
+                            "\[(ar|croatian|es|esp|ger|german|kazakh|pl|portugal|pt|ru|spanish|ukrainian)\]",
+                            acedesc,
+                            re.IGNORECASE,
+                        )
+                        == None
+                    ):
+                        lang_1.append(Show(url=aurl, title=acedesc.decode("UTF-8")))
+                    else:
+                        lang_0.append(Show(url=aurl, title=acedesc.decode("UTF-8")))
+
     for e in lang_0:
         oc.add(e)
     for e in lang_1:
@@ -126,16 +152,13 @@ def ShowStreamsInRedditPosts(title, url):
     return oc
 
 
-@route("/video/acestream/r/soccerstreams69")
-def ShowSubRedditSoccerStreams69Posts(title):
+@route("/video/acestream/footybite/posts")
+def ShowFootybitePosts(title):
     oc = ObjectContainer(title2=title)
     oc.add(
-        DirectoryObject(
-            key=Callback(ShowSubRedditSoccerStreams69Posts, title=title),
-            title="Refresh",
-        )
+        DirectoryObject(key=Callback(ShowFootybitePosts, title=title), title="Refresh")
     )
-    fetchSubRedditPosts(oc, "https://www.reddit.com/r/soccerstreams69.json", " vs")
+    fetchFootybitePosts(oc)
     return oc
 
 
