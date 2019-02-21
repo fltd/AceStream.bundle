@@ -21,7 +21,7 @@ def MainMenu():
         aurl = "http://{}:{}/ace/manifest.m3u8?id={}".format(
             Prefs["ace_host"], Prefs["ace_port"], Prefs["stream_id"]
         )
-        acedesc = "Customized Stream [{}]".format(Prefs["stream_id"])
+        acedesc = "Play Customized Stream [{}]".format(Prefs["stream_id"])
         oc.add(Show(url=aurl, title=acedesc.decode("UTF-8")))
     oc.add(
         DirectoryObject(
