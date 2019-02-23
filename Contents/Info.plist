@@ -4,6 +4,8 @@
   <dict>
     <key>CFBundleIdentifier</key>
     <string>com.floydev.plex.acestream</string>
+    <key>PlexPluginCodePolicy</key>
+    <string>Elevated</string>
     <key>PlexClientPlatforms</key>
     <string>*</string>
     <key>PlexFrameworkVersion</key>

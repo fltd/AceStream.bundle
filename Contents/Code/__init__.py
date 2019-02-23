@@ -1,15 +1,12 @@
 import json
 import re
+import requests
 from lxml import etree
 from datetime import datetime, timedelta
 
 
 def Start():
     ObjectContainer.title1 = "AceStream"
-    HTTP.Headers[
-        "User-Agent"
-    ] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"
-    HTTP.CacheTime = 0
     Log("AceStream host: {}, Ace port: {}".format(Prefs["ace_host"], Prefs["ace_port"]))
 
 
@@ -39,7 +36,7 @@ def fetchFootybitePosts(oc):
     yesterday = datetime.utcnow() - timedelta(days=1)
     up_to_date = True
     while True:
-        html = HTTP.Request(url.format(p)).content
+        html = requests.get(url.format(p)).content
         doc = etree.HTML(html)
         items = doc.xpath(".//div[@role='main']//div[@class='item-details']")
         for item in items:
@@ -105,7 +102,7 @@ def ShowStreamsInFootybitePosts(title, url):
     lang_0 = []
     lang_1 = []
     # Force HTTP due to the exception - SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
-    html = HTTP.Request(url.replace("https://", "http://")).content
+    html = requests.get(url.replace("https://", "http://")).content
     doc = etree.HTML(html)
     table_node = doc.xpath(".//table[@id='dataTable']")
     table = None
