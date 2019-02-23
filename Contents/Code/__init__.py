@@ -29,8 +29,7 @@ def MainMenu():
 
 
 def fetchFootybitePosts(oc):
-    # Force HTTP due to the exception - SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
-    url = "http://www.footybite.com/page/{0!s}/"
+    url = "https://www.footybite.com/page/{0!s}/"
     selector = " vs"
     p = 1
     yesterday = datetime.utcnow() - timedelta(days=1)
@@ -101,8 +100,7 @@ def ShowStreamsInFootybitePosts(title, url):
     )
     lang_0 = []
     lang_1 = []
-    # Force HTTP due to the exception - SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
-    html = requests.get(url.replace("https://", "http://")).content
+    html = requests.get(url).content
     doc = etree.HTML(html)
     table_node = doc.xpath(".//table[@id='dataTable']")
     table = None
