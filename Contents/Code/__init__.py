@@ -32,7 +32,7 @@ def fetchFootybitePosts(oc):
     url = "https://www.footybite.com/page/{0!s}/"
     selector = " vs"
     p = 1
-    yesterday = datetime.utcnow() - timedelta(days=1)
+    three_days_before = datetime.utcnow() - timedelta(days=3)
     up_to_date = True
     while True:
         html = requests.get(url.format(p)).content
@@ -62,7 +62,7 @@ def fetchFootybitePosts(oc):
                 date = datetime.strptime(
                     date.replace("+00:00", "Z"), "%Y-%m-%dT%H:%M:%SZ"
                 )
-                if yesterday > date:
+                if three_days_before > date:
                     up_to_date = False
                     break
                 title = title.replace(" Preview & Prediction", "")
