@@ -4,10 +4,7 @@ This is based on the ACE.bundle ([https://github.com/syco/ACE.bundle](https://gi
 
 ## Introduction
 
-A [Plex Media Servers](https://www.plex.tv/downloads) plug-in capable of
-
-1. Scrapes posts from [Footybite](https://footybite.com/) looking for acestream links and then populate a list understandable by plex
-2. Plays your customized AceStream ID
+A [Plex Media Servers](https://www.plex.tv/downloads) plug-in capable of playing your customized AceStream ID
 
 ## Requirements
 
